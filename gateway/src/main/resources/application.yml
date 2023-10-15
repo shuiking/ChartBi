@@ -1,0 +1,30 @@
+server:
+  port: 8090
+spring:
+  application:
+    name: lk-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: lk-backend
+          uri: http://localhost:8091
+          predicates:
+            - Path=/admin/**
+          filters:
+            - StripPrefix=1
+  redis:
+    host: localhost
+    port: 6379
+    database: 1
+
+dubbo:
+  application:
+    qosEnable: false
+    enable-file-cache: false
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848

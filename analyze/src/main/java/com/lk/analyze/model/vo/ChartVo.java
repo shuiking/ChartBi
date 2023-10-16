@@ -1,24 +1,17 @@
-package com.lk.backend.model.entity;
+package com.lk.analyze.model.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
- * 图表信息表
- * @TableName chart
+ * 图表信息表(脱敏)
+ * @Author : lk
+ * @create 2023/10/15
  */
-@TableName(value ="chart")
 @Data
-public class Chart implements Serializable {
-    /**
-     * id
-     */
-    @TableId(type = IdType.AUTO)
+public class ChartVo implements Serializable {
     private Long id;
 
     /**
@@ -50,17 +43,10 @@ public class Chart implements Serializable {
      * 生成的分析结论
      */
     private String genResult;
-
     /**
-     * 创建用户Id
-     */
-    private Long userId;
-
-    /**
-     * wait,running,succeed,failed
+     * 执行状态
      */
     private String status;
-
     /**
      * 执行信息
      */
@@ -71,16 +57,6 @@ public class Chart implements Serializable {
      */
     private Date createTime;
 
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
-    /**
-     * 是否删除
-     */
-    private Integer isDelete;
-
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

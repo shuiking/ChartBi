@@ -1,9 +1,9 @@
-package com.lk.backend.service;
+package com.lk.analyze.service;
 
-import com.lk.backend.model.dto.chart.GenChartByAiRequest;
-import com.lk.backend.model.entity.Chart;
+import com.lk.analyze.model.dto.chart.GenChartByAiRequest;
+import com.lk.analyze.model.entity.Chart;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lk.backend.model.entity.User;
+import com.lk.analyze.model.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

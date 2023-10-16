@@ -1,16 +1,16 @@
-package com.lk.backend.model.dto.chart;
+package com.lk.analyze.model.dto.user;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
 /**
- * 图表重新请求请求体
+ * 删除请求体
  * @Author : lk
- * @create 2023/10/15
+ * @create 2023/10/14
  */
 @Data
-public class ChartRebuildRequest implements Serializable {
+public class DeleteRequest implements Serializable {
     /**
      * id
      */

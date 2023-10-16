@@ -1,16 +1,14 @@
-package com.lk.backend.service.impl;
+package com.lk.analyze.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lk.backend.constant.ChartConstant;
-import com.lk.backend.constant.CreditConstant;
-import com.lk.backend.model.dto.chart.GenChartByAiRequest;
-import com.lk.backend.model.entity.Chart;
-import com.lk.backend.model.entity.User;
-import com.lk.backend.service.ChartService;
-import com.lk.backend.mapper.ChartMapper;
-import com.lk.backend.service.CreditService;
+import com.lk.analyze.constant.ChartConstant;
+import com.lk.analyze.model.dto.chart.GenChartByAiRequest;
+import com.lk.analyze.model.entity.Chart;
+import com.lk.analyze.model.entity.User;
+import com.lk.analyze.service.ChartService;
+import com.lk.analyze.mapper.ChartMapper;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.exception.BusinessException;
 import com.lk.common.exception.ThrowUtils;
@@ -33,8 +31,8 @@ import java.util.List;
 @Service
 public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
     implements ChartService{
-    @Resource
-    CreditService creditService;
+//    @Resource
+//    CreditService creditService;
 
     @Override
     public String buildUserInput(Chart chart){
@@ -79,8 +77,9 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
         // 压缩后的数据
         String csvData = ExcelUtils.excelToCsv(multipartFile);
         //消耗积分
-        Boolean creditResult = creditService.updateCredits(loginUser.getId(), CreditConstant.CREDIT_CHART_SUCCESS);
-        ThrowUtils.throwIf(!creditResult,ErrorCode.OPERATION_ERROR,"你的积分不足");
+//        TODO 积分
+//        Boolean creditResult = creditService.updateCredits(loginUser.getId(), CreditConstant.CREDIT_CHART_SUCCESS);
+//        ThrowUtils.throwIf(!creditResult,ErrorCode.OPERATION_ERROR,"你的积分不足");
         //保存数据库 wait
         Chart chart = new Chart();
         chart.setUserId(loginUser.getId());

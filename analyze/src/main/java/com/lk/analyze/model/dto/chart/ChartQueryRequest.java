@@ -1,4 +1,4 @@
-package com.lk.backend.model.dto.chart;
+package com.lk.analyze.model.dto.chart;
 
 import com.lk.common.request.PageRequest;
 import lombok.Data;

@@ -67,10 +67,6 @@ mybatis-plus:
       logic-delete-value: 1 # 逻辑已删除值（默认为 1）
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
 
-yuapi:
-  client:
-    access-key: ux7bpq5mqr8db3n0dfhd46bunkebr8f3
-    secret-key: eg6zsakkz0av0f6jae3g3cw163nw56hc
 
 alipay:
   appId: 9021000122698871

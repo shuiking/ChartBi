@@ -1,11 +1,5 @@
 server:
-  port: 8099
-  servlet:
-    context-path: /userApi
-    # cookie 30 天过期
-    session:
-      cookie:
-        max-age: 2592000
+  port: 8091
 spring:
   application:
     name: lk-backend

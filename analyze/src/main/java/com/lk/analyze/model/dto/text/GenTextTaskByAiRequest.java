@@ -1,16 +1,16 @@
-package com.lk.backend.model.dto.text;
+package com.lk.analyze.model.dto.text;
 
 import lombok.Data;
 
 import java.io.Serializable;
 
 /**
- * 文本添加请求体
+ * 文本生成请求体
  * @Author : lk
  * @create 2023/10/15
  */
 @Data
-public class TextAddRequest implements Serializable {
+public class GenTextTaskByAiRequest implements Serializable {
     /**
      * 笔记名称
      */

@@ -16,7 +16,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
-        <dubbo.version>3.0.9</dubbo.version>
+        <dubbo.version>3.1.0</dubbo.version>
         <nacos-client.version>2.1.0</nacos-client.version>
         <redisson.version>3.17.5</redisson.version>
         <mybatis-plus-boot-starter.version>3.5.1</mybatis-plus-boot-starter.version>
@@ -84,7 +84,7 @@
 
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
-                <artifactId>dubbo</artifactId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>${dubbo.version}</version>
             </dependency>
 
@@ -155,6 +155,7 @@
                 <artifactId>alipay-sdk-java</artifactId>
                 <version>${alipay.version}</version>
             </dependency>
+
 
         </dependencies>
 

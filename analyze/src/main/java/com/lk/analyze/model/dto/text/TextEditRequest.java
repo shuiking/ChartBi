@@ -1,16 +1,16 @@
-package com.lk.backend.model.vo;
+package com.lk.analyze.model.dto.text;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
+ * 笔记编辑请求体
  * @Author : lk
  * @create 2023/10/15
  */
 @Data
-public class TextTaskVo {
-
+public class TextEditRequest implements Serializable {
     /**
      * 任务id
      */
@@ -32,16 +32,15 @@ public class TextTaskVo {
     private String genTextContent;
 
     /**
+     * 创建用户Id
+     */
+    private Long userId;
+
+    /**
      * wait,running,succeed,failed
      */
     private String status;
 
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
 
     private static final long serialVersionUID = 1L;
 }
-

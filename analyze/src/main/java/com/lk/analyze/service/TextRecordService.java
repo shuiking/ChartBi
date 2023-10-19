@@ -1,7 +1,7 @@
-package com.lk.backend.service;
+package com.lk.analyze.service;
 
-import com.lk.backend.model.entity.TextRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.lk.analyze.model.entity.TextRecord;
 
 /**
 * @author k
@@ -15,5 +15,5 @@ public interface TextRecordService extends IService<TextRecord> {
      * @param textTaskType
      * @return
      */
-    String buildUserInput(TextRecord textRecord,String textTaskType);
+    String buildUserInput(TextRecord textRecord, String textTaskType);
 }

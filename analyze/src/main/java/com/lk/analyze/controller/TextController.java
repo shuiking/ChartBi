@@ -1,25 +1,22 @@
-package com.lk.backend.controller;
+package com.lk.analyze.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.google.gson.Gson;
-import com.lk.backend.annotation.AuthCheck;
-import com.lk.backend.constant.MqConstant;
-import com.lk.backend.constant.TextConstant;
-import com.lk.backend.manager.AiManager;
-import com.lk.backend.manager.RedisLimiterManager;
-import com.lk.backend.model.dto.text.*;
-import com.lk.backend.model.dto.user.DeleteRequest;
-import com.lk.backend.model.entity.TextRecord;
-import com.lk.backend.model.entity.TextTask;
-import com.lk.backend.model.entity.User;
-import com.lk.backend.model.vo.AiResponseVo;
-import com.lk.backend.model.vo.TextTaskVo;
-import com.lk.backend.mq.common.MqMessageProducer;
-import com.lk.backend.service.CreditService;
-import com.lk.backend.service.TextRecordService;
-import com.lk.backend.service.TextTaskService;
-import com.lk.backend.service.UserService;
+import com.lk.analyze.annotation.AuthCheck;
+import com.lk.analyze.constant.MqConstant;
+import com.lk.analyze.constant.TextConstant;
+import com.lk.analyze.interceptor.LoginUserInterceptor;
+import com.lk.analyze.manager.AiManager;
+import com.lk.analyze.manager.RedisLimiterManager;
+import com.lk.analyze.model.dto.text.*;
+import com.lk.analyze.model.dto.user.DeleteRequest;
+import com.lk.analyze.model.entity.TextRecord;
+import com.lk.analyze.model.entity.TextTask;
+import com.lk.analyze.model.vo.AiResponseVo;
+import com.lk.analyze.model.vo.TextTaskVo;
+import com.lk.analyze.mq.common.MqMessageProducer;
+import com.lk.analyze.service.TextRecordService;
+import com.lk.analyze.service.TextTaskService;
 import com.lk.common.api.BaseResponse;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.api.ResultUtils;
@@ -39,7 +36,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 笔记转化接口
@@ -55,8 +51,6 @@ public class TextController {
 
     @Resource
     private TextRecordService textRecordService;
-    @Resource
-    private UserService userService;
 
     @Resource
     private RedisLimiterManager redisLimiterManager;
@@ -83,7 +77,7 @@ public class TextController {
         TextTask textTask = new TextTask();
         BeanUtils.copyProperties(textTaskAddRequest, textTask);
 
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         textTask.setUserId(loginUser.getId());
         boolean result = textTaskService.save(textTask);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -103,13 +97,13 @@ public class TextController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
+        UserTo user = LoginUserInterceptor.loginUser.get();
         long id = deleteRequest.getId();
         // 判断是否存在
         TextTask oldTextTask = textTaskService.getById(id);
         ThrowUtils.throwIf(oldTextTask == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!oldTextTask.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldTextTask.getUserId().equals(user.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean b = textTaskService.removeById(id);
@@ -149,7 +143,7 @@ public class TextController {
         if (textTaskUpdateRequest == null || textTaskUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         TextTask textTask = new TextTask();
         BeanUtils.copyProperties(textTaskUpdateRequest, textTask);
         long id = textTaskUpdateRequest.getId();
@@ -230,7 +224,7 @@ public class TextController {
         if (textTaskQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         textTaskQueryRequest.setUserId(loginUser.getId());
         long current = textTaskQueryRequest.getCurrent();
         long size = textTaskQueryRequest.getPageSize();
@@ -258,7 +252,7 @@ public class TextController {
         }
         TextTask textTask = new TextTask();
         BeanUtils.copyProperties(textTaskEditRequest, textTask);
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         long id = textTaskEditRequest.getId();
         // 判断是否存在
         TextTask oldTextTask = textTaskService.getById(id);
@@ -266,7 +260,7 @@ public class TextController {
         // 仅本人或管理员可编辑
         UserTo userTo = new UserTo();
         BeanUtils.copyProperties(loginUser,userTo);
-        if (!oldTextTask.getUserId().equals(loginUser.getId()) && !userService.isAdmin(userTo)) {
+        if (!oldTextTask.getUserId().equals(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = textTaskService.updateById(textTask);
@@ -307,7 +301,7 @@ public class TextController {
     public BaseResponse<AiResponseVo> genTextTaskAi(@RequestPart("file") MultipartFile multipartFile,
                                                     GenTextTaskByAiRequest genTextTaskByAiRequest, HttpServletRequest request) {
 
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         //限流
         redisLimiterManager.doRateLimit("doRateLimit_" + loginUser.getId());
         //获取文本任务并校验
@@ -366,7 +360,7 @@ public class TextController {
                                                          GenTextTaskByAiRequest genTextTaskByAiRequest, HttpServletRequest request) {
 
 
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         //限流
         redisLimiterManager.doRateLimit("doRateLimit_" + loginUser.getId());
         //获取文本任务并校验
@@ -401,7 +395,7 @@ public class TextController {
             ThrowUtils.throwIf(StringUtils.isBlank(textRecord.getTextContent()),ErrorCode.PARAMS_ERROR,"文本为空");
         });
 
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         //限流
         redisLimiterManager.doRateLimit("doRateLimit_" + loginUser.getId());
 

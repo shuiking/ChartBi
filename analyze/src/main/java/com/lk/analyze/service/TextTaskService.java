@@ -1,9 +1,9 @@
-package com.lk.backend.service;
+package com.lk.analyze.service;
 
-import com.lk.backend.model.dto.text.GenTextTaskByAiRequest;
-import com.lk.backend.model.entity.TextTask;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lk.backend.model.entity.User;
+import com.lk.analyze.model.dto.text.GenTextTaskByAiRequest;
+import com.lk.analyze.model.entity.TextTask;
+import com.lk.common.model.to.UserTo;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -19,7 +19,7 @@ public interface TextTaskService extends IService<TextTask> {
      * @param loginUser
      * @return
      */
-    TextTask getTextTask(MultipartFile multipartFile, GenTextTaskByAiRequest genTextTaskByAiRequest, User loginUser);
+    TextTask getTextTask(MultipartFile multipartFile, GenTextTaskByAiRequest genTextTaskByAiRequest, UserTo loginUser);
 
     /**
      * 文本更新失败
@@ -27,4 +27,6 @@ public interface TextTaskService extends IService<TextTask> {
      * @param execMessage
      */
     void handleTextTaskUpdateError(Long textTaskId, String execMessage);
+
+
 }

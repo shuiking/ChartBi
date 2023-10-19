@@ -1,7 +1,7 @@
-package com.lk.backend.mapper;
+package com.lk.analyze.mapper;
 
-import com.lk.backend.model.entity.TextRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lk.analyze.model.entity.TextRecord;
 
 /**
 * @author k

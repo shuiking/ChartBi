@@ -17,6 +17,7 @@ import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -215,6 +216,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
         return queryWrapper;
+    }
+
+    @Override
+    public UserTo test() {
+        UserTo userTo = new UserTo();
+        userTo.setUserName("hello world");
+        userTo.setUserPassword("123");
+        return userTo;
     }
 }
 

@@ -8,12 +8,15 @@ import com.lk.analyze.model.dto.chart.GenChartByAiRequest;
 import com.lk.analyze.model.entity.Chart;
 import com.lk.analyze.service.ChartService;
 import com.lk.analyze.mapper.ChartMapper;
+import com.lk.backend.feign.CreditFeignService;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.exception.BusinessException;
 import com.lk.common.exception.ThrowUtils;
 import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.ExcelUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +33,9 @@ import java.util.List;
 @Service
 public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
     implements ChartService{
-//    @Resource
-//    CreditService creditService;
+    @DubboReference
+    CreditFeignService creditFeignService;
+
 
     @Override
     public String buildUserInput(Chart chart){
@@ -76,9 +80,8 @@ public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
         // 压缩后的数据
         String csvData = ExcelUtils.excelToCsv(multipartFile);
         //消耗积分
-//        TODO 积分
-//        Boolean creditResult = creditService.updateCredits(loginUser.getId(), CreditConstant.CREDIT_CHART_SUCCESS);
-//        ThrowUtils.throwIf(!creditResult,ErrorCode.OPERATION_ERROR,"你的积分不足");
+        Boolean creditResult=creditFeignService.useCredit(loginUser.getId());
+        ThrowUtils.throwIf(!creditResult,ErrorCode.OPERATION_ERROR,"你的积分不足");
         //保存数据库 wait
         Chart chart = new Chart();
         chart.setUserId(loginUser.getId());

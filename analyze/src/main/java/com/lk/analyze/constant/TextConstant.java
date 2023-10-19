@@ -1,4 +1,4 @@
-package com.lk.backend.constant;
+package com.lk.analyze.constant;
 
 /**
  * 图表常量
@@ -11,7 +11,6 @@ public interface TextConstant {
      */
     String WAIT = "wait";
 
-    //  region 权限
 
     /**
      * 执行

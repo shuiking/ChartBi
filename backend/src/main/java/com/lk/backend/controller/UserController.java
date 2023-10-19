@@ -2,6 +2,7 @@ package com.lk.backend.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lk.backend.annotation.AuthCheck;
+import com.lk.backend.interceptor.LoginUserInterceptor;
 import com.lk.backend.model.dto.user.*;
 import com.lk.backend.model.entity.User;
 import com.lk.backend.model.vo.LoginUserVo;
@@ -14,6 +15,7 @@ import com.lk.common.api.ResultUtils;
 import com.lk.common.constant.UserConstant;
 import com.lk.common.exception.BusinessException;
 import com.lk.common.exception.ThrowUtils;
+import com.lk.common.model.to.UserTo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -268,7 +270,7 @@ public class UserController {
      */
     @GetMapping("/get/credit")
     public BaseResponse<Long> getCreditByUserId(HttpServletRequest request) {
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         Long userId = loginUser.getId();
         Long creditTotal = creditService.getCreditTotal(userId);
         if (creditTotal == null) {

@@ -1,6 +1,6 @@
-package com.lk.backend.mq.text;
+package com.lk.analyze.mq.text;
 
-import com.lk.backend.constant.MqConstant;
+import com.lk.analyze.constant.MqConstant;
 import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

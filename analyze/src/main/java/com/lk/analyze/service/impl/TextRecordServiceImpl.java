@@ -1,9 +1,9 @@
-package com.lk.backend.service.impl;
+package com.lk.analyze.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lk.backend.model.entity.TextRecord;
-import com.lk.backend.service.TextRecordService;
-import com.lk.backend.mapper.TextRecordMapper;
+import com.lk.analyze.mapper.TextRecordMapper;
+import com.lk.analyze.model.entity.TextRecord;
+import com.lk.analyze.service.TextRecordService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

@@ -1,16 +1,19 @@
-package com.lk.backend.model.dto.text;
+package com.lk.analyze.model.dto.text;
 
+import com.lk.common.request.PageRequest;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
 /**
- * 笔记更新请求体
+ * 笔记查询请求体
  * @Author : lk
  * @create 2023/10/15
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class TextUpdateRequest implements Serializable {
+public class TextTaskQueryRequest extends PageRequest implements Serializable {
 
     /**
      * 任务id
@@ -33,16 +36,14 @@ public class TextUpdateRequest implements Serializable {
     private String genTextContent;
 
     /**
+     * 创建用户Id
+     */
+    private Long userId;
+
+    /**
      * wait,running,succeed,failed
      */
     private String status;
-
-    /**
-     * 执行信息
-     */
-    private String execMessage;
-
-
 
     private static final long serialVersionUID = 1L;
 }

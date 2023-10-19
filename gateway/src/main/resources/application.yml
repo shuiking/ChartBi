@@ -1,5 +1,5 @@
 server:
-  port: 8090
+  port: 8099
 spring:
   application:
     name: lk-gateway
@@ -9,7 +9,14 @@ spring:
         - id: lk-backend
           uri: http://localhost:8091
           predicates:
-            - Path=/admin/**
+            - Path=/userApi/**
+          filters:
+            - StripPrefix=1
+
+        - id: lk-analyze
+          uri: http://localhost:8092
+          predicates:
+            - Path=/analyzeApi/**
           filters:
             - StripPrefix=1
   redis:
@@ -21,7 +28,7 @@ dubbo:
   application:
     qosEnable: false
     enable-file-cache: false
-    name: dubbo-springboot-demo-provider
+    name: dubbo-springboot-demo-coumser
   protocol:
     name: dubbo
     port: -1

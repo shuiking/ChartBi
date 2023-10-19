@@ -28,6 +28,8 @@ import com.lk.common.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -206,9 +208,6 @@ public class ChartController {
                 getQueryWrapper(chartQueryRequest));
         return ResultUtils.success(chartPage);
     }
-
-    // endregion
-
 
     /**
      * 编辑（用户）

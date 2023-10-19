@@ -1,4 +1,4 @@
-package com.lk.backend.model.dto.text;
+package com.lk.analyze.model.dto.text;
 
 import lombok.Data;
 

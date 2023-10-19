@@ -1,45 +1,41 @@
-package com.lk.backend.model.entity;
+package com.lk.analyze.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
 import lombok.Data;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
- * 文本任务表
- * @TableName text_task
+ * 文本记录表
+ * @TableName text_record
  */
-@TableName(value ="text_task")
+@TableName(value ="text_record")
 @Data
-public class TextTask implements Serializable {
+public class TextRecord implements Serializable {
     /**
-     * 任务id
+     * id
      */
     @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
-     * 笔记名称
+     * 文本任务id
      */
-    private String name;
+    private Long textTaskId;
 
     /**
-     * 文本类型
+     * 文本内容
      */
-    private String textType;
+    private String textContent;
 
     /**
      * 生成的文本内容
      */
     private String genTextContent;
-
-    /**
-     * 创建用户Id
-     */
-    private Long userId;
 
     /**
      * wait,running,succeed,failed

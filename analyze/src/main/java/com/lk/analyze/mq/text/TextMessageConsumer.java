@@ -1,18 +1,17 @@
-package com.lk.backend.mq.text;
+package com.lk.analyze.mq.text;
 
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.lk.backend.constant.MqConstant;
-import com.lk.backend.constant.TextConstant;
-import com.lk.backend.manager.AiManager;
-import com.lk.backend.model.entity.TextRecord;
-import com.lk.backend.model.entity.TextTask;
-import com.lk.backend.service.TextRecordService;
-import com.lk.backend.service.TextTaskService;
+import com.lk.analyze.constant.MqConstant;
+import com.lk.analyze.constant.TextConstant;
+import com.lk.analyze.manager.AiManager;
+import com.lk.analyze.model.entity.TextRecord;
+import com.lk.analyze.model.entity.TextTask;
+import com.lk.analyze.service.TextRecordService;
+import com.lk.analyze.service.TextTaskService;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.exception.BusinessException;
 import com.rabbitmq.client.Channel;
-
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

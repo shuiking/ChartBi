@@ -1,21 +1,21 @@
-package com.lk.backend.service.impl;
+package com.lk.analyze.service.impl;
 
 import cn.hutool.core.io.FileUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lk.backend.constant.CreditConstant;
-import com.lk.backend.constant.TextConstant;
-import com.lk.backend.model.dto.text.GenTextTaskByAiRequest;
-import com.lk.backend.model.entity.TextRecord;
-import com.lk.backend.model.entity.TextTask;
-import com.lk.backend.model.entity.User;
-import com.lk.backend.service.CreditService;
-import com.lk.backend.service.TextRecordService;
-import com.lk.backend.service.TextTaskService;
-import com.lk.backend.mapper.TextTaskMapper;
+import com.lk.analyze.constant.TextConstant;
+import com.lk.analyze.mapper.TextTaskMapper;
+import com.lk.analyze.model.dto.text.GenTextTaskByAiRequest;
+import com.lk.analyze.model.entity.TextRecord;
+import com.lk.analyze.model.entity.TextTask;
+import com.lk.analyze.service.TextRecordService;
+import com.lk.analyze.service.TextTaskService;
+import com.lk.backend.feign.CreditFeignService;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.exception.ThrowUtils;
+import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.TxtUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,15 +33,17 @@ import java.util.List;
 @Service
 public class TextTaskServiceImpl extends ServiceImpl<TextTaskMapper, TextTask>
     implements TextTaskService{
-    @Resource
-    private CreditService creditService;
+//    @Resource
+//    private CreditService creditService;
+    @DubboReference
+    CreditFeignService creditFeignService;
 
     @Resource
     private TextRecordService textRecordService;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public TextTask getTextTask(MultipartFile multipartFile, GenTextTaskByAiRequest genTextTaskByAiRequest, User loginUser) {
+    public TextTask getTextTask(MultipartFile multipartFile, GenTextTaskByAiRequest genTextTaskByAiRequest, UserTo loginUser) {
         String textTaskType = genTextTaskByAiRequest.getTextType();
         String name = genTextTaskByAiRequest.getName();
         //校验
@@ -59,7 +61,7 @@ public class TextTaskServiceImpl extends ServiceImpl<TextTaskMapper, TextTask>
         ThrowUtils.throwIf(!validFileSuffix.contains(suffix),ErrorCode.PARAMS_ERROR,"文件后缀名非法");
 
         //消耗积分
-        Boolean creditResult = creditService.updateCredits(loginUser.getId(), CreditConstant.CREDIT_CHART_SUCCESS);
+        Boolean creditResult=creditFeignService.useCredit(loginUser.getId());
         ThrowUtils.throwIf(!creditResult,ErrorCode.OPERATION_ERROR,"你的积分不足");
 
         //保存数据库 wait

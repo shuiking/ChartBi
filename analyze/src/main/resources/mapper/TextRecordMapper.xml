@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lk.backend.mapper.TextRecordMapper">
+<mapper namespace="com.lk.analyze.mapper.TextRecordMapper">
 
-    <resultMap id="BaseResultMap" type="com.lk.backend.model.entity.TextRecord">
+    <resultMap id="BaseResultMap" type="com.lk.analyze.model.entity.TextRecord">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="textTaskId" column="textTaskId" jdbcType="BIGINT"/>
             <result property="textContent" column="textContent" jdbcType="VARCHAR"/>

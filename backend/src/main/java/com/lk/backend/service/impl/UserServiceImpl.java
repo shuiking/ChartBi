@@ -13,6 +13,7 @@ import com.lk.backend.mapper.UserMapper;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.constant.CommonConstant;
 import com.lk.common.exception.BusinessException;
+import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -112,7 +113,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 3. 记录用户的登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        UserTo userTo = new UserTo();
+        BeanUtils.copyProperties(user,userTo);
+        request.getSession().setAttribute(USER_LOGIN_STATE, userTo);
         return this.getLoginUserVo(user);
     }
 
@@ -146,12 +149,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public boolean isAdmin(HttpServletRequest request) {
         // 仅管理员可查询
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User user = (User) userObj;
+        UserTo user = (UserTo) userObj;
         return isAdmin(user);
     }
 
     @Override
-    public boolean isAdmin(User user) {
+    public boolean isAdmin(UserTo user) {
         return user != null && UserRoleEnum.ADMIN.getValue().equals(user.getUserRole());
     }
 
@@ -159,17 +162,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public User getLoginUser(HttpServletRequest request) {
         // 先判断是否已登录
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
+        UserTo currentUser = (UserTo) userObj;
         if (currentUser == null || currentUser.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
         // 从数据库查询（追求性能的话可以注释，直接走缓存）
         long userId = currentUser.getId();
-        currentUser = this.getById(userId);
-        if (currentUser == null) {
+        User user = new User();
+        user = this.getById(userId);
+        if (user == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
-        return currentUser;
+        return user;
     }
 
     @Override

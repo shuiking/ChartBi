@@ -1,25 +1,23 @@
-package com.lk.analyze.model.entity;
+package com.lk.common.model.to;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户
- * @TableName user
+ * 用户对象转化类
+ * @Author : lk
+ * @create 2023/10/19
  */
-@TableName(value ="user")
 @Data
-public class User implements Serializable {
+public class UserTo implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
@@ -62,6 +60,5 @@ public class User implements Serializable {
      */
     private Integer isDelete;
 
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

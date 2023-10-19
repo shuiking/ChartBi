@@ -19,6 +19,7 @@ import com.lk.common.constant.CommonConstant;
 import com.lk.common.constant.UserConstant;
 import com.lk.common.exception.BusinessException;
 import com.lk.common.exception.ThrowUtils;
+import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -191,7 +192,9 @@ public class CreditController {
         Credit oldCredit = creditService.getById(id);
         ThrowUtils.throwIf(oldCredit == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
-        if (!oldCredit.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+        UserTo userTo = new UserTo();
+        BeanUtils.copyProperties(loginUser,userTo);
+        if (!oldCredit.getUserId().equals(loginUser.getId()) && !userService.isAdmin(userTo)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = creditService.updateById(credit);

@@ -1,4 +1,4 @@
-package com.lk.analyze.aop;
+package com.lk.backend.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -22,11 +22,11 @@ import java.util.UUID;
 @Aspect
 @Component
 @Slf4j
-public class LogInterceptor {
+public class LogAop {
     /**
      * 执行拦截
      */
-    @Around("execution(* com.lk.analyze.controller.*.*(..))")
+    @Around("execution(* com.lk.backend.controller.*.*(..))")
     public Object doInterceptor(ProceedingJoinPoint point) throws Throwable {
         // 计时
         StopWatch stopWatch = new StopWatch();

@@ -2,14 +2,13 @@ package com.lk.analyze.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lk.analyze.interceptor.LoginUserInterceptor;
 import com.lk.analyze.manager.AiManager;
 import com.lk.analyze.manager.RedisLimiterManager;
 import com.lk.analyze.model.dto.chart.ChartAddRequest;
 import com.lk.analyze.model.entity.Chart;
-import com.lk.analyze.model.entity.User;
 import com.lk.analyze.mq.common.MqMessageProducer;
 import com.lk.analyze.service.ChartService;
-import com.lk.analyze.service.UserService;
 import com.lk.analyze.annotation.AuthCheck;
 import com.lk.analyze.constant.ChartConstant;
 import com.lk.analyze.constant.MqConstant;
@@ -24,6 +23,7 @@ import com.lk.common.constant.CommonConstant;
 import com.lk.common.constant.UserConstant;
 import com.lk.common.exception.BusinessException;
 import com.lk.common.exception.ThrowUtils;
+import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -48,21 +48,15 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class ChartController {
     @Resource
     private ChartService chartService;
-
-    @Resource
-    private UserService userService;
-
     @Resource
     private RedisLimiterManager redisLimiterManager;
     @Resource
     private AiManager aiManager;
     @Resource
     ThreadPoolExecutor threadPoolExecutor;
-
     @Resource
     private MqMessageProducer mqMessageProducer;
 
-    // region 增删改查
 
     /**
      * 创建
@@ -79,7 +73,7 @@ public class ChartController {
         Chart chart = new Chart();
         BeanUtils.copyProperties(chartAddRequest, chart);
 
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         chart.setUserId(loginUser.getId());
         boolean result = chartService.save(chart);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -99,13 +93,13 @@ public class ChartController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         long id = deleteRequest.getId();
         // 判断是否存在
         Chart oldChart = chartService.getById(id);
         ThrowUtils.throwIf(oldChart == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可删除
-        if (!oldChart.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        if (!oldChart.getUserId().equals(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean b = chartService.removeById(id);
@@ -202,7 +196,7 @@ public class ChartController {
         if (chartQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         chartQueryRequest.setUserId(loginUser.getId());
         long current = chartQueryRequest.getCurrent();
         long size = chartQueryRequest.getPageSize();
@@ -230,13 +224,13 @@ public class ChartController {
         }
         Chart chart = new Chart();
         BeanUtils.copyProperties(chartEditRequest, chart);
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         long id = chartEditRequest.getId();
         // 判断是否存在
         Chart oldChart = chartService.getById(id);
         ThrowUtils.throwIf(oldChart == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
-        if (!oldChart.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+        if (!oldChart.getUserId().equals(loginUser.getId())) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = chartService.updateById(chart);
@@ -280,7 +274,7 @@ public class ChartController {
     public BaseResponse<AiResponseVo> genChartAi(@RequestPart("file") MultipartFile multipartFile,
                                                  GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
 
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         //限流
         redisLimiterManager.doRateLimit("doRateLimit_" + loginUser.getId());
         //获取任务表数据
@@ -311,7 +305,7 @@ public class ChartController {
     public BaseResponse<AiResponseVo> genChartAsyncAi(@RequestPart("file") MultipartFile multipartFile,
                                                     GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
 
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         //限流
         redisLimiterManager.doRateLimit("doRateLimit_" + loginUser.getId());
         //获取任务表数据
@@ -357,7 +351,7 @@ public class ChartController {
     @PostMapping("/gen/async/mq")
     public BaseResponse<AiResponseVo> genChartAsyncAiMq(@RequestPart("file") MultipartFile multipartFile,
                                                       GenChartByAiRequest genChartByAiRequest, HttpServletRequest request) {
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         //限流
         redisLimiterManager.doRateLimit("doRateLimit_" + loginUser.getId());
         //获取任务表数据
@@ -376,7 +370,6 @@ public class ChartController {
 
     /**
      * 图表重新生成(mq)
-     *
      * @param chartRebuildRequest
      * @param request
      * @return
@@ -396,7 +389,7 @@ public class ChartController {
         ThrowUtils.throwIf(StringUtils.isBlank(chartData),ErrorCode.PARAMS_ERROR,"表格数据为空");
         ThrowUtils.throwIf(StringUtils.isBlank(chartType),ErrorCode.PARAMS_ERROR,"生成表格类型为空");
 
-        User loginUser = userService.getLoginUser(request);
+        UserTo loginUser = LoginUserInterceptor.loginUser.get();
         //限流
         redisLimiterManager.doRateLimit("doRateLimit_" + loginUser.getId());
 

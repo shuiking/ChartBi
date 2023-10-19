@@ -27,6 +27,7 @@ import com.lk.common.constant.CommonConstant;
 import com.lk.common.constant.UserConstant;
 import com.lk.common.exception.BusinessException;
 import com.lk.common.exception.ThrowUtils;
+import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -61,14 +62,9 @@ public class TextController {
     private RedisLimiterManager redisLimiterManager;
     @Resource
     private AiManager aiManager;
-    @Resource
-    private CreditService creditService;
-    @Resource
-    ThreadPoolExecutor threadPoolExecutor;
 
     @Resource
     private MqMessageProducer mqMessageProducer;
-    private final static Gson GSON = new Gson();
 
     // region 增删改查
 
@@ -268,7 +264,9 @@ public class TextController {
         TextTask oldTextTask = textTaskService.getById(id);
         ThrowUtils.throwIf(oldTextTask == null, ErrorCode.NOT_FOUND_ERROR);
         // 仅本人或管理员可编辑
-        if (!oldTextTask.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+        UserTo userTo = new UserTo();
+        BeanUtils.copyProperties(loginUser,userTo);
+        if (!oldTextTask.getUserId().equals(loginUser.getId()) && !userService.isAdmin(userTo)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = textTaskService.updateById(textTask);
@@ -287,7 +285,6 @@ public class TextController {
         String sortOrder = textTaskQueryRequest.getSortOrder();
         Long id = textTaskQueryRequest.getId();
         Long userId = textTaskQueryRequest.getUserId();
-
 
         queryWrapper.eq(id!=null &&id>0,"id",id);
         queryWrapper.like(StringUtils.isNotEmpty(name),"name",name);

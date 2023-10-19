@@ -3,7 +3,7 @@ package com.lk.analyze.service;
 import com.lk.analyze.model.dto.chart.GenChartByAiRequest;
 import com.lk.analyze.model.entity.Chart;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lk.analyze.model.entity.User;
+import com.lk.common.model.to.UserTo;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -38,5 +38,5 @@ public interface ChartService extends IService<Chart> {
      * @param loginUser
      * @return
      */
-    Chart getChartTask(MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, User loginUser);
+    Chart getChartTask(MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, UserTo loginUser);
 }

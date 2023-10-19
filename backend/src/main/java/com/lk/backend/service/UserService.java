@@ -6,6 +6,7 @@ import com.lk.backend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.lk.backend.model.vo.LoginUserVo;
 import com.lk.backend.model.vo.UserVo;
+import com.lk.common.model.to.UserTo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -65,7 +66,7 @@ public interface UserService extends IService<User> {
      * @param user
      * @return
      */
-    boolean isAdmin(User user);
+    boolean isAdmin(UserTo user);
 
 
 

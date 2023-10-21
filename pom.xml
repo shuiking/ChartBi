@@ -26,6 +26,7 @@
         <easyexcel.version>3.1.0</easyexcel.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <alipay.version>4.38.4.ALL</alipay.version>
+        <minio.version>8.5.2</minio.version>
     </properties>
 
     <modules>
@@ -154,6 +155,12 @@
                 <groupId>com.alipay.sdk</groupId>
                 <artifactId>alipay-sdk-java</artifactId>
                 <version>${alipay.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.minio</groupId>
+                <artifactId>minio</artifactId>
+                <version>${minio.version}</version>
             </dependency>
 
 

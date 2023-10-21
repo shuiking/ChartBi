@@ -73,7 +73,7 @@ public class CreditController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
+        User user = userService.getLoginUser();
         long id = deleteRequest.getId();
         // 判断是否存在
         Credit oldCredit = creditService.getById(id);
@@ -158,7 +158,7 @@ public class CreditController {
         if (creditQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = userService.getLoginUser();
         creditQueryRequest.setUserId(loginUser.getId());
         long current = creditQueryRequest.getCurrent();
         long size = creditQueryRequest.getPageSize();
@@ -186,7 +186,7 @@ public class CreditController {
         }
         Credit credit = new Credit();
         BeanUtils.copyProperties(creditEditRequest, credit);
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = userService.getLoginUser();
         long id = creditEditRequest.getId();
         // 判断是否存在
         Credit oldCredit = creditService.getById(id);
@@ -208,7 +208,7 @@ public class CreditController {
      */
     @GetMapping("/sign")
     public BaseResponse<Boolean> signCredit(HttpServletRequest request) {
-        User loginUser = userService.getLoginUser(request);
+        User loginUser = userService.getLoginUser();
         Long userId = loginUser.getId();
         Boolean result = creditService.signUser(userId);
         return ResultUtils.success(result);

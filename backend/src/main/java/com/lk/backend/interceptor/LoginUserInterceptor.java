@@ -28,9 +28,13 @@ public class LoginUserInterceptor implements HandlerInterceptor {
         String uri = request.getRequestURI();
         boolean match1 = new AntPathMatcher().match("/user/login", uri);
         boolean match2 = new AntPathMatcher().match("/user/register", uri);
-        if (match1||match2) {
+        boolean match3=new AntPathMatcher().match("/alipay/notify",uri);
+
+        if (match1||match2||match3) {
             return true;
         }
+//        return true;
+
         HttpSession session = request.getSession();
         UserTo user = (UserTo) session.getAttribute(USER_LOGIN_STATE);
         if (user != null) {

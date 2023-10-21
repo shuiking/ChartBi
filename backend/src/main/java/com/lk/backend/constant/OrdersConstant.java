@@ -9,14 +9,13 @@ public interface OrdersConstant {
     /**
      * 回调地址(本地部署时需要内网穿透)
      */
-    String NOTIFYURL = "http://6ytvug.natappfree.cc/api/alipay/notify";
+    String NOTIFYURL = "http://psgp9tec.shenzhuo.vip:33664/userApi/alipay/notify";
 
     /**
      * 未支付
      */
     String UNPAID = "unpaid";
 
-    //  region 权限
 
     /**
      * 支付中

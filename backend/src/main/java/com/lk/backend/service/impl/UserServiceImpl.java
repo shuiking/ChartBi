@@ -3,6 +3,7 @@ package com.lk.backend.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lk.backend.interceptor.LoginUserInterceptor;
 import com.lk.backend.model.dto.user.UserQueryRequest;
 import com.lk.backend.model.entity.User;
 import com.lk.backend.model.enums.UserRoleEnum;
@@ -160,10 +161,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public User getLoginUser(HttpServletRequest request) {
+    public User getLoginUser() {
         // 先判断是否已登录
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        UserTo currentUser = (UserTo) userObj;
+        UserTo currentUser = LoginUserInterceptor.loginUser.get();
         if (currentUser == null || currentUser.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }

@@ -1,8 +1,8 @@
-package com.lk.backend.feign.impl;
+package com.lk.backend.feign;
 
 import com.lk.backend.constant.CreditConstant;
-import com.lk.backend.feign.CreditFeignService;
 import com.lk.backend.service.CreditService;
+import com.lk.common.feign.CreditFeignService;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import javax.annotation.Resource;

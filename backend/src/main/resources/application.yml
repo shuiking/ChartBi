@@ -17,10 +17,9 @@ spring:
   session:
     store-type: redis
     timeout: 2592000
-
   redis:
     database: 4
-    host: localhost
+    host: 127.0.0.1
     port: 6379
     timeout: 5000
 
@@ -42,7 +41,7 @@ spring:
 dubbo:
   application:
     enable-file-cache: false
-    name: dubbo-springboot-demo-provider
+    name: dubbo-backend
   protocol:
     name: dubbo
     port: -1

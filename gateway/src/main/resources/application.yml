@@ -28,10 +28,11 @@ dubbo:
   application:
     qosEnable: false
     enable-file-cache: false
-    name: dubbo-springboot-demo-coumser
+    name: dubbo-gateway
   protocol:
     name: dubbo
     port: -1
   registry:
     id: nacos-registry
     address: nacos://localhost:8848
+    parameters.register-consumer-url: true

@@ -9,9 +9,9 @@ import com.lk.analyze.model.entity.TextRecord;
 import com.lk.analyze.model.entity.TextTask;
 import com.lk.analyze.service.TextRecordService;
 import com.lk.analyze.service.TextTaskService;
-import com.lk.backend.feign.CreditFeignService;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.exception.ThrowUtils;
+import com.lk.common.feign.CreditFeignService;
 import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.TxtUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,10 +33,8 @@ import java.util.List;
 @Service
 public class TextTaskServiceImpl extends ServiceImpl<TextTaskMapper, TextTask>
     implements TextTaskService{
-//    @Resource
-//    private CreditService creditService;
     @DubboReference
-    CreditFeignService creditFeignService;
+    private CreditFeignService creditFeignService;
 
     @Resource
     private TextRecordService textRecordService;

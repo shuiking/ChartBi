@@ -1,8 +1,8 @@
-package com.lk.backend.feign;
+package com.lk.common.feign;
 
 /**
  * @Author : lk
- * @create 2023/10/21
+ * @create 2023/10/26
  */
 public interface CreditFeignService {
     Boolean useCredit(Long userId);

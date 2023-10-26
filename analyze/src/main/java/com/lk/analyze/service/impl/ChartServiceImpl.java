@@ -8,15 +8,14 @@ import com.lk.analyze.model.dto.chart.GenChartByAiRequest;
 import com.lk.analyze.model.entity.Chart;
 import com.lk.analyze.service.ChartService;
 import com.lk.analyze.mapper.ChartMapper;
-import com.lk.backend.feign.CreditFeignService;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.exception.BusinessException;
 import com.lk.common.exception.ThrowUtils;
+import com.lk.common.feign.CreditFeignService;
 import com.lk.common.model.to.UserTo;
 import com.lk.common.utils.ExcelUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +33,7 @@ import java.util.List;
 public class ChartServiceImpl extends ServiceImpl<ChartMapper, Chart>
     implements ChartService{
     @DubboReference
-    CreditFeignService creditFeignService;
+    private CreditFeignService creditFeignService;
 
 
     @Override

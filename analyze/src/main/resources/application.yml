@@ -43,7 +43,7 @@ spring:
 dubbo:
   application:
     enable-file-cache: false
-    name: dubbo-springboot-demo-consumer
+    name: dubbo-analyze
   protocol:
     name: dubbo
     port: -1

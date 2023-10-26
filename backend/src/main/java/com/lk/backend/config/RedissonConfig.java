@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
  * @Author : lk
  * @create 2023/10/15
  */
+@Data
 @Configuration
 @ConfigurationProperties(prefix = "spring.redis")
-@Data
 public class RedissonConfig {
     private Integer database;
 

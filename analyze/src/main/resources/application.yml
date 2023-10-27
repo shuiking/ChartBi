@@ -67,8 +67,3 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
 
 
-
-yuapi:
-  client:
-    access-key: vlo57mujjl82rtjwo97hxt708uonsbaf
-    secret-key: ij995szshxp0xfvc8z0nasnfopeqb1nv

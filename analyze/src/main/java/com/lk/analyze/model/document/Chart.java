@@ -22,11 +22,6 @@ public class Chart {
     @Id
     private String id;
 
-    /**
-     * 图表id
-     */
-    @Indexed
-    private Long chartId;
 
     /**
      * 图表名称
@@ -61,6 +56,7 @@ public class Chart {
     /**
      * 创建用户Id
      */
+    @Indexed
     private Long userId;
 
     /**

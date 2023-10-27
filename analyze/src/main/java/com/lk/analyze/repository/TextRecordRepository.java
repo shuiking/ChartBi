@@ -1,18 +1,20 @@
 package com.lk.analyze.repository;
 
-import com.lk.analyze.model.entity.TextRecord;
+import com.lk.analyze.model.document.TextRecord;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
- * 文本记录表Repository
+ * 文本记录Repository
  * @Author : lk
- * @create 2023/10/27
+ * @create 2023/10/28
  */
-public interface TextRecordRepository {
+@Component
+public interface TextRecordRepository extends MongoRepository<TextRecord,String> {
     /**
-     * 文本用户输入构造
-     * @param textRecord
-     * @param textTaskType
-     * @return
+     * 根据文本任务id获取文本记录数据
      */
-    String buildUserInput(TextRecord textRecord, String textTaskType);
+    List<TextRecord> findTextRecordsByTextTaskId(String textTaskId);
 }

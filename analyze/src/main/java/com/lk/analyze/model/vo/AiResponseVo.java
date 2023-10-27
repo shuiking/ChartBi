@@ -12,5 +12,5 @@ public class AiResponseVo {
     /**
      * 返回结果id
      */
-    private Long resultId;
+    private String resultId;
 }

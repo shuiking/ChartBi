@@ -18,7 +18,7 @@ public class TextTaskQueryRequest extends PageRequest implements Serializable {
     /**
      * 任务id
      */
-    private Long id;
+    private String id;
 
     /**
      * 笔记名称

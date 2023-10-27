@@ -30,7 +30,7 @@ public class TextRecord {
     /**
      * 文本任务id
      */
-    private Long textTaskId;
+    private String textTaskId;
 
     /**
      * 文本内容

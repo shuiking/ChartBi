@@ -1,29 +1,33 @@
 package com.lk.analyze.repository;
 
-import com.lk.analyze.model.dto.text.GenTextTaskByAiRequest;
-import com.lk.analyze.model.entity.TextTask;
-import com.lk.common.model.to.UserTo;
-import org.springframework.web.multipart.MultipartFile;
+import com.lk.analyze.model.document.TextTask;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Component;
 
 /**
  * 文本任务表Repository
  * @Author : lk
  * @create 2023/10/27
  */
-public interface TextTaskRepository {
+@Component
+public interface TextTaskRepository extends MongoRepository<TextTask, String> {
     /**
-     * 获取准备分析的表数据(事务回滚)
-     * @param multipartFile
-     * @param genTextTaskByAiRequest
-     * @param loginUser
-     * @return
+     * 根据用户id获取当前用的全部图表数据
      */
-    TextTask getTextTask(MultipartFile multipartFile, GenTextTaskByAiRequest genTextTaskByAiRequest, UserTo loginUser);
+    Page<TextTask> findTextTaskByUserIdOrderByCreateTimeDesc(Long userId, Pageable pageable);
 
     /**
-     * 文本更新失败
-     * @param textTaskId
-     * @param execMessage
+     * 根据文本任务id删除数据
      */
-    void handleTextTaskUpdateError(Long textTaskId, String execMessage);
+    int deleteTextTaskById(String id);
+
+    /**
+     * 根据文本任务id获取数据
+     */
+    TextTask findTextTaskById(String id);
+
+
 }

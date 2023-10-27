@@ -1,42 +1,34 @@
 package com.lk.analyze.repository;
 
 import com.lk.analyze.model.document.Chart;
-import com.lk.analyze.model.dto.chart.GenChartByAiRequest;
-import com.lk.common.model.to.UserTo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * 图表Repository
  * @Author : lk
  * @create 2023/10/27
  */
+@Component
 public interface ChartRepository extends MongoRepository<Chart,String> {
     /**
-     * 图表用户输入构造
-     * @param chart
-     * @return
+     * 获取当前用的全部图表数据
      */
-    String buildUserInput(com.lk.analyze.model.entity.Chart chart);
-    /**
-     * 处理Ai返回信息保存
-     * @param result
-     * @return
-     */
-    boolean saveChartAiResult(String result, long chartId);
+    Page<Chart> findChartByUserIdOrderByCreateTimeDesc(Long userId,Pageable pageable);
 
     /**
-     * 图表更新失败
-     * @param chartId
-     * @param execMessage
+     * 根据图表id删除数据
      */
-    void handleChartUpdateError(Long chartId, String execMessage);
+    int deleteChartById(String id);
+
     /**
-     * 获取准备分析的表数据(事务回滚)
-     * @param multipartFile
-     * @param genChartByAiRequest
-     * @param loginUser
-     * @return
+     * 根据图表id获取数据
      */
-    com.lk.analyze.model.entity.Chart getChartTask(MultipartFile multipartFile, GenChartByAiRequest genChartByAiRequest, UserTo loginUser);
+    Chart findChartById(String id);
+
+
 }

@@ -30,7 +30,5 @@ public class ChartAddRequest implements Serializable {
      */
     private String chatType;
 
-
-
     private static final long serialVersionUID = 1L;
 }

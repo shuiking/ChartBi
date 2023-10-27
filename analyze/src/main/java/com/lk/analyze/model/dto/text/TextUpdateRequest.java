@@ -15,7 +15,7 @@ public class TextUpdateRequest implements Serializable {
     /**
      * 任务id
      */
-    private Long id;
+    private String id;
 
     /**
      * 笔记名称

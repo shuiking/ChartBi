@@ -5,18 +5,23 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lk.analyze.constant.MqConstant;
 import com.lk.analyze.constant.TextConstant;
 import com.lk.analyze.manager.AiManager;
-import com.lk.analyze.model.entity.TextRecord;
-import com.lk.analyze.model.entity.TextTask;
+import com.lk.analyze.model.document.TextRecord;
+import com.lk.analyze.model.document.TextTask;
 import com.lk.analyze.service.TextRecordService;
 import com.lk.analyze.service.TextTaskService;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.exception.BusinessException;
+import com.mongodb.client.result.UpdateResult;
 import com.rabbitmq.client.Channel;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
@@ -29,38 +34,35 @@ import java.util.List;
 @Component
 @Slf4j
 public class TextMessageConsumer {
-
     @Resource
     private TextTaskService textTaskService;
 
     @Resource
     private TextRecordService textRecordService;
+
     @Resource
     private AiManager aiManager;
 
     @SneakyThrows
     @RabbitListener(queues = {MqConstant.TEXT_QUEUE_NAME},ackMode = "MANUAL")
-    public void receiveMessage(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag){
-        log.warn("接收到队列信息，receiveMessage={}=======================================",message);
-        if (StringUtils.isBlank(message)){
+    public void receiveMessage(String textTaskId, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag){
+        log.warn("接收到队列信息，receiveMessage={}=======================================",textTaskId);
+        if (StringUtils.isBlank(textTaskId)){
             //消息为空，消息拒绝，不重复发送，不重新放入队列
             channel.basicNack(deliveryTag,false,false);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"消息为空");
         }
 
-        long textTaskId = Long.parseLong(message);
-        List<TextRecord> textRecordList = textRecordService.list(new QueryWrapper<TextRecord>().eq("textTaskId", textTaskId));
+        List<TextRecord> textRecordList=textRecordService.getTextRecordListByTextTaskId(textTaskId);
         //todo 可以将记录表字段增加一个type 减少一次查询表
-        TextTask textTask = textTaskService.getById(textTaskId);
+        TextTask textTask=textTaskService.getTextTaskById(textTaskId);
+
         if (textRecordList == null){
             channel.basicNack(deliveryTag,false,false);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"文本为空");
         }
         //修改表状态为执行中，执行成功修改为“已完成”；执行失败修改为“失败”
-        TextTask updateTask = new TextTask();
-        updateTask.setId(textTaskId);
-        updateTask.setStatus(TextConstant.RUNNING);
-        boolean updateResult = textTaskService.updateById(updateTask);
+        boolean updateResult = textTaskService.updateTextTaskStatusById(textTaskId, TextConstant.RUNNING);
         if (!updateResult){
             textTaskService.handleTextTaskUpdateError(textTaskId,"更新图表执行状态失败");
             return;
@@ -80,7 +82,8 @@ public class TextMessageConsumer {
             }
             textRecord.setGenTextContent(result);
             textRecord.setStatus(TextConstant.SUCCEED);
-            boolean updateById = textRecordService.updateById(textRecord);
+            Boolean updateById = textRecordService.updateTextRecordStatusById(textRecord);
+
             if (!updateById){
                 log.warn("AI生成错误，重新放入队列");
                 channel.basicNack(deliveryTag,false,true);
@@ -96,7 +99,7 @@ public class TextMessageConsumer {
         textTask1.setId(textTaskId);
         textTask1.setGenTextContent(stringBuilder.toString());
         textTask1.setStatus(TextConstant.SUCCEED);
-        boolean save = textTaskService.updateById(textTask1);
+        boolean save = textTaskService.updateTextTask(textTask1);
         if (!save){
             channel.basicNack(deliveryTag,false,true);
             textTaskService.handleTextTaskUpdateError(textTask.getId(), "ai返回文本任务保存失败");

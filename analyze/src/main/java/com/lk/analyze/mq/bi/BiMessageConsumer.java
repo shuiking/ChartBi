@@ -2,12 +2,10 @@ package com.lk.analyze.mq.bi;
 
 import cn.hutool.core.date.DateTime;
 import com.lk.analyze.manager.AiManager;
+import com.lk.analyze.model.document.Chart;
 import com.lk.analyze.service.ChartService;
 import com.lk.analyze.constant.ChartConstant;
 import com.lk.analyze.constant.MqConstant;
-import com.lk.analyze.manager.AiManager;
-import com.lk.analyze.model.entity.Chart;
-import com.lk.analyze.service.ChartService;
 import com.lk.common.api.ErrorCode;
 import com.lk.common.exception.BusinessException;
 import com.rabbitmq.client.Channel;
@@ -18,7 +16,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
 
 /**
@@ -36,25 +33,21 @@ public class BiMessageConsumer {
 
     @SneakyThrows
     @RabbitListener(queues = {MqConstant.BI_QUEUE_NAME},ackMode = "MANUAL")
-    public void receiveMessage(String message, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag){
-        log.warn("接收到队列信息，receiveMessage={}=======================================",message);
-        if (StringUtils.isBlank(message)){
+    public void receiveMessage(String chartId, Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag){
+        log.warn("接收到队列信息，receiveMessage={}=======================================",chartId);
+        if (StringUtils.isBlank(chartId)){
             //消息为空，消息拒绝，不重复发送，不重新放入队列
             channel.basicNack(deliveryTag,false,false);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"消息为空");
         }
-        long chartId = Long.parseLong(message);
-        Chart chart = chartService.getById(chartId);
+        Chart chart=chartService.getChartById(chartId);
         if (chart == null){
             channel.basicNack(deliveryTag,false,false);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"图表为空");
         }
 
         //修改表状态为执行中，执行成功修改为“已完成”；执行失败修改为“失败”
-        Chart updateChart = new Chart();
-        updateChart.setId(chart.getId());
-        updateChart.setStatus(ChartConstant.RUNNING);
-        boolean updateResult = chartService.updateById(updateChart);
+        Boolean updateResult = chartService.updateChartStatusById(chart.getId(), ChartConstant.RUNNING);
         if (!updateResult){
             handleChartUpdateError(chart.getId(),"更新图表执行状态失败");
             return;
@@ -82,12 +75,13 @@ public class BiMessageConsumer {
         //消息确认
         channel.basicAck(deliveryTag,false);
     }
-    private void handleChartUpdateError(Long chartId, String execMessage) {
+    private void handleChartUpdateError(String chartId, String execMessage) {
         Chart updateChartResult = new Chart();
         updateChartResult.setStatus(ChartConstant.FAILED);
         updateChartResult.setId(chartId);
         updateChartResult.setExecMessage(execMessage);
-        boolean updateResult = chartService.updateById(updateChartResult);
+//        TODO 更新问题
+        boolean updateResult = chartService.updateChart(updateChartResult);
         if (!updateResult){
             log.error("更新图片失败状态失败"+chartId+","+execMessage);
         }

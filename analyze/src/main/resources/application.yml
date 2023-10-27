@@ -19,6 +19,11 @@ spring:
       initial-size: 5 #连接池初始化大小
       min-idle: 10 #最小空闲连接数
       max-active: 20 #最大连接数
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: mongo
   redis:
     database: 4
     host: 127.0.0.1

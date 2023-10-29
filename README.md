@@ -4,8 +4,12 @@
 
 组织结构
 =====
-ChartBi
-├── analyze -- ai智能分析模块
-├── backend -- 用户信息管理系统服务
-├── common -- 工具类及通用代码模块
+ChartBi  
+├── analyze -- ai智能分析模块  
+├── backend -- 用户信息管理系统服务  
+├── common -- 工具类及通用代码模块  
 ├── gateway -- 基于Spring Cloud Gateway的微服务API网关服务
+
+技术选型
+=====
+

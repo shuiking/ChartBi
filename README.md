@@ -22,4 +22,6 @@ ChartBi
 | nacos | 服务注册和发现 |
 | mysql | 数据库 |
 ## 系统架构图
+![image](https://github.com/shuiking/ChartBi/assets/86963048/efa82de4-5bbe-4a9d-9d3b-2f4ab2cd77a2)
+
 ## 代码运行相关截图

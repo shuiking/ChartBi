@@ -12,4 +12,16 @@ ChartBi
 
 技术选型
 =====
+| 技术 | 说明 |
+| --- | --- |
+| dubbo | RPC框架 |
+| Spring Boot | 容器+MVC框架 |
+| MyBatis-Plus | ORM框架 |
+| Redis | 分布式缓存 |
+| RabbitMq | 消息队列 |
+| MongoDb | NoSql数据库 |
+| MinIO | 对象存储 |
+| Knife4j | 文档生产工具 |
+| nacos | 服务注册和发现 |
+| mysql | 数据库 |
 

@@ -25,3 +25,12 @@ ChartBi
 ![image](https://github.com/shuiking/ChartBi/assets/86963048/efa82de4-5bbe-4a9d-9d3b-2f4ab2cd77a2)
 
 ## 代码运行相关截图
+![image](https://github.com/shuiking/ChartBi/assets/86963048/aca3cca6-1c0e-489e-b9e5-c4c9ac5f3550)
+![image](https://github.com/shuiking/ChartBi/assets/86963048/470c413d-0024-45e7-9c3e-068de30c5344)
+![image](https://github.com/shuiking/ChartBi/assets/86963048/e55f33b1-a885-4441-b752-2b67ff11a3e7)
+![image](https://github.com/shuiking/ChartBi/assets/86963048/a37545d2-ae22-4261-b2e2-d4159028a6b2)
+![image](https://github.com/shuiking/ChartBi/assets/86963048/58afe03a-ebda-462d-a0c9-3fff146593bf)
+![image](https://github.com/shuiking/ChartBi/assets/86963048/b68a9a89-25c7-4aec-b9a5-b64a1faa746a)
+
+
+
